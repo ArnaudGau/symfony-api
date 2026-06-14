@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: symfony_api_app
+    ports:
+      - "8080:8000"
+    volumes:
+      - .:/app
+      - composer_cache:/tmp/composer-cache
+    environment:
+      COMPOSER_CACHE_DIR: /tmp/composer-cache
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - symfony
+
+  database:
+    image: mysql:8
+    container_name: symfony_api_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: symfony_api
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: symfony_api
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - symfony
+
+volumes:
+  composer_cache:
+  db_data:
+
+networks:
+  symfony:
