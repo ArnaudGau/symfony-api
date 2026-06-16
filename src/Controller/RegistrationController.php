@@ -36,7 +36,7 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
+            $user->setRoles(['ROLE_USER']);
             $entityManager->persist($user);
             $entityManager->flush();
 
@@ -46,20 +46,6 @@ class RegistrationController extends AbstractController
                 'roles' => $user->getRoles(),
             ], Response::HTTP_CREATED);
         }
-
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
-        ]);
-    }
-
-    private function isJsonRequest(Request $request): bool
-    {
-        if ($request->getContentTypeFormat() === 'json') {
-            return true;
-        }
-
-        $content = trim($request->getContent());
-
-        return $request->isMethod('POST') && str_starts_with($content, '{');
+        return $this->json(['error' => 'Invalid data', 'details' => (string) $form->getErrors(true, false)], 400);
     }
 }

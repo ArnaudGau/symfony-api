@@ -50,6 +50,9 @@ logs:
 entity:
 	$(APP) php bin/console make:entity
 
+controller:
+	$(APP) php bin/console make:controller
+
 migration:
 	$(APP) php bin/console make:migration
 
@@ -85,3 +88,6 @@ reset-db:
 	$(APP) php bin/console doctrine:database:create
 	$(APP) php bin/console doctrine:migrations:migrate --no-interaction
 	$(APP) php bin/console doctrine:fixtures:load --no-interaction
+
+api:
+	$(APP) php bin/console make:controller --no-template $(name)
