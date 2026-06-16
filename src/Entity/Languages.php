@@ -14,6 +14,7 @@ class Languages
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['language:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -76,7 +77,7 @@ class Languages
     {
         if (!$this->word->contains($word)) {
             $this->word->add($word);
-            $word->setLanguageId($this);
+            $word->setLanguage($this);
         }
 
         return $this;
@@ -86,8 +87,8 @@ class Languages
     {
         if ($this->word->removeElement($word)) {
             // set the owning side to null (unless already changed)
-            if ($word->getLanguageId() === $this) {
-                $word->setLanguageId(null);
+            if ($word->getLanguage() === $this) {
+                $word->setLanguage(null);
             }
         }
 

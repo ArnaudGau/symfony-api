@@ -2,42 +2,40 @@
 
 namespace App\Controller;
 
-use App\Repository\LanguagesRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Dto\CreateLanguageDto;
-use Symfony\Component\HttpFoundation\Response;
+use App\Entity\Languages;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-
-
-final class LanguagesController extends AbstractController
+final class LanguagesController extends BaseCrudController
 {
-    private LanguagesRepository $languagesRepository;
-
-    public function __construct(LanguagesRepository $languagesRepository)
+    protected function entityClass(): string
     {
-        $this->languagesRepository = $languagesRepository;
+        return Languages::class;
     }
 
-    #[Route('/api/languages', name: 'app_languages')]
-    public function index(): Response
+    protected function getDtoCreate(): string
     {
-        $languages = $this->languagesRepository->findAll();
-
-        return $this->json($languages, 200, [], [
-            'groups' => ['language:read']
-        ]);
+        return CreateLanguageDto::class;
     }
 
-    #[Route('api/admin/languages', name:'admin_create_language', methods:['POST'])]
+    protected function getReadGroups(): array
+    {
+        return ['language:read'];
+    }
+
+    #[Route('/api/languages', name: 'app_languages', methods: ['GET'])]
+    public function index(): JsonResponse
+    {
+        return parent::index();
+    }
+
+    #[Route('/api/admin/languages', name: 'admin_create_language', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function create(#[MapRequestPayload] CreateLanguageDto $dto): Response
+    public function create(Request $request): JsonResponse
     {
-        $languages = $this->languagesRepository->create($dto);
-        return $this->json($languages, Response::HTTP_CREATED, [], [
-            'groups' => ['language:read']
-        ]);
+        return parent::create($request);
     }
 }
