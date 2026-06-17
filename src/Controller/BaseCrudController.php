@@ -17,6 +17,7 @@ abstract class BaseCrudController extends AbstractController
     abstract protected function entityClass(): string;
 
     abstract protected function getDtoCreate(): string;
+    abstract protected function getDtoUpdate(): string;
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
@@ -89,5 +90,41 @@ abstract class BaseCrudController extends AbstractController
         return $this->json($entity, Response::HTTP_CREATED, [], [
             'groups' => $this->getReadGroups(),
         ]);
+    }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+        $dtoClass = $this->getDtoUpdate();
+        $dto = $this->validateDto($request, $dtoClass);
+
+        $repository = $this->getRepository();
+
+        if (!method_exists($repository, 'update')) {
+            throw new \LogicException(sprintf(
+                'Repository for "%s" must implement an update() method.',
+                $this->entityClass()
+            ));
+        }
+        $model = $repository->find($id);
+        $entity = $repository->update($model, $dto);
+
+        return $this->json($entity, 200, [], [
+            'groups' => $this->getReadGroups(),
+        ]);
+    }
+
+    public function delete(Request $request, $id): JsonResponse
+    {
+        $repository = $this->getRepository();
+        $entity = $repository->find($id);
+
+        if (!$entity) {
+            return $this->json(['message' => 'Entity not found'], 404);
+        }
+
+        $this->entityManager->remove($entity);
+        $this->entityManager->flush();
+
+        return $this->json(['message' => 'Entity deleted successfully'], 200);
     }
 }

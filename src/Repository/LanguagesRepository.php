@@ -28,6 +28,15 @@ class LanguagesRepository extends ServiceEntityRepository
         return $language;
     }
 
+    public function update(Languages $language, $dto): Languages
+    {
+        $language->setName($dto->name);
+        $language->setCode($dto->code);
+
+        $this->getEntityManager()->flush();
+
+        return $language;
+    }
 //    /**
 //     * @return Languages[] Returns an array of Languages objects
 //     */

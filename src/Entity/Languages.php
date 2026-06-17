@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: LanguagesRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQUE_CODE_NAME', fields: ['code', 'name'])]
 class Languages
 {
     #[ORM\Id]
@@ -18,6 +19,7 @@ class Languages
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+
     #[Groups(['language:read'])]
     private ?string $name = null;
 

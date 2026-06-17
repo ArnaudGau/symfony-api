@@ -9,3 +9,7 @@
 
 controllers:
     resource: routing.controllers
+    
+languages:
+    prefix: /api
+    resource: 'routes/languages.yaml'
