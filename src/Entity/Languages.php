@@ -9,14 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: LanguagesRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQUE_CODE_NAME', fields: ['code', 'name'])]
 class Languages
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['language:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+
     #[Groups(['language:read'])]
     private ?string $name = null;
 
@@ -76,7 +79,7 @@ class Languages
     {
         if (!$this->word->contains($word)) {
             $this->word->add($word);
-            $word->setLanguageId($this);
+            $word->setLanguage($this);
         }
 
         return $this;
@@ -86,8 +89,8 @@ class Languages
     {
         if ($this->word->removeElement($word)) {
             // set the owning side to null (unless already changed)
-            if ($word->getLanguageId() === $this) {
-                $word->setLanguageId(null);
+            if ($word->getLanguage() === $this) {
+                $word->setLanguage(null);
             }
         }
 

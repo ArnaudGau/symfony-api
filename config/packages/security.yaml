@@ -40,8 +40,9 @@ security:
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/api, roles: ROLE_USER }
         - { path: ^/api/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/languages, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
+        - { path: ^/api, roles: ROLE_USER }
 
 when@test:
     security:

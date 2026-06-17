@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Dto;
+namespace App\Dto\Languages;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class CreateLanguageDto
+class Create
 {
     #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
