@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class BaseCrudController extends AbstractController
 {
@@ -23,11 +24,22 @@ abstract class BaseCrudController extends AbstractController
         protected EntityManagerInterface $entityManager,
         protected SerializerInterface $serializer,
         protected ValidatorInterface $validator,
+        protected LoggerInterface $logger
     ) {}
 
     protected function getRepository(): ObjectRepository
     {
         return $this->entityManager->getRepository($this->entityClass());
+    }
+
+    public function logInfo()
+    {
+        $this->logger->info('Info log from BaseCrudController');
+    }
+
+    public function logError(string $message, array $context = [])   
+    {
+      $this->logger->error($message, $context);
     }
 
     protected function validateDto(Request $request, string $dtoClass): object
@@ -39,6 +51,7 @@ abstract class BaseCrudController extends AbstractController
                 'json'
             );
         } catch (\Throwable $e) {
+            $this->logError('Invalid Json paylod', [''=> $dtoClass,'message'=> $e->getMessage()]);
             throw new BadRequestHttpException('Invalid JSON payload');
         }
 
@@ -79,6 +92,8 @@ abstract class BaseCrudController extends AbstractController
         $repository = $this->getRepository();
 
         if (!method_exists($repository, 'create')) {
+            $this->logError('function create is mandatory', [''=> $dtoClass, 'entity'=> $this->entityClass()]);
+
             throw new \LogicException(sprintf(
                 'Repository for "%s" must implement a create() method.',
                 $this->entityClass()
@@ -100,6 +115,8 @@ abstract class BaseCrudController extends AbstractController
         $repository = $this->getRepository();
 
         if (!method_exists($repository, 'update')) {
+            $this->logError('function update is mandatory', [''=> $dtoClass, 'entity'=> $this->entityClass()]);
+
             throw new \LogicException(sprintf(
                 'Repository for "%s" must implement an update() method.',
                 $this->entityClass()
