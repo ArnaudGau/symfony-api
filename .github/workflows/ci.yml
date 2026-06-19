@@ -22,7 +22,6 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
-      # On crée un .env minimal pour éviter que le runtime de Symfony ne plante
       - name: Create baseline .env
         run: |
           echo "APP_ENV=test" > .env
@@ -53,17 +52,24 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
-      # Même chose ici : création du fichier .env requis par Symfony
-      - name: Prepare Symfony Env
+      # REAJOUT : Nécessaire pour le dump-env juste après
+      - name: Create baseline .env
         run: |
           echo "APP_ENV=test" > .env
           echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
+          echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" >> .env
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
-      - name: Warmup Cache
-        run: php bin/console cache:clear --env=test
+      - name: Dump Env
+        run: composer dump-env test
 
+      - name: Install PHPUnit Bridge
+        run: php vendor/symfony/phpunit-bridge/bin/simple-phpunit --version
+
+      # CORRECTION : Chemin nettoyé ici
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        env:
+          SYMFONY_DEPRECATIONS_HELPER: disabled
+        run: php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests
