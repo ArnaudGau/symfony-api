@@ -54,7 +54,7 @@ jobs:
       # Remplace le "Prepare Laravel" par la préparation de l'environnement Symfony
       - name: Prepare Symfony Env
         run: |
-          echo "APP_ENV=test" > .env.local
+          echo "APP_ENV=test" > .env.dev
 
       # Commande de test standard pour Symfony (PHPUnit)
       - name: Run tests
