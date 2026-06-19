@@ -1,6 +1,6 @@
 name: Symfony CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   lint:
@@ -22,8 +22,14 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
+      # On crée un .env minimal pour éviter que le runtime de Symfony ne plante
+      - name: Create baseline .env
+        run: |
+          echo "APP_ENV=test" > .env
+          echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
+
+       Tarifs
       - name: Install dependencies
-        # --no-scripts bloque le cache:clear automatique ici
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
       - name: Run Pint
@@ -48,17 +54,15 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
-      # 1. On prépare l'environnement d'abord
+      # Même chose ici : création du fichier .env requis par Symfony
       - name: Prepare Symfony Env
         run: |
-          echo "APP_ENV=test" > .env.local
-          echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env.local
+          echo "APP_ENV=test" > .env
+          echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
 
-      # 2. On installe (on peut garder --no-scripts pour aller plus vite)
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
-      # 3. Si tes tests ont besoin du cache reconstruit proprement :
       - name: Warmup Cache
         run: php bin/console cache:clear --env=test
 
