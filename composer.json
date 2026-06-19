@@ -83,6 +83,8 @@
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
-        "symfony/maker-bundle": "^1.67"
+        "laravel/pint": "^1.29",
+        "symfony/maker-bundle": "^1.67",
+        "symfony/phpunit-bridge": "^8.1"
     }
 }

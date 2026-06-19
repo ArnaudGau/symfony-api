@@ -1,0 +1,12 @@
+{
+    "preset": "symfony",
+    "exclude": [
+        "var",
+        "public",
+        "bin",
+        "migrations"
+    ],
+    "notName": [
+        "*.blade.php"
+    ]
+}

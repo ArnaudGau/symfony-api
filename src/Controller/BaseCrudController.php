@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,21 +12,22 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Psr\Log\LoggerInterface;
 
 abstract class BaseCrudController extends AbstractController
 {
     abstract protected function entityClass(): string;
 
     abstract protected function getDtoCreate(): string;
+
     abstract protected function getDtoUpdate(): string;
 
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected SerializerInterface $serializer,
         protected ValidatorInterface $validator,
-        protected LoggerInterface $logger
-    ) {}
+        protected LoggerInterface $logger,
+    ) {
+    }
 
     protected function getRepository(): ObjectRepository
     {
@@ -37,9 +39,9 @@ abstract class BaseCrudController extends AbstractController
         $this->logger->info('Info log from BaseCrudController');
     }
 
-    public function logError(string $message, array $context = [])   
+    public function logError(string $message, array $context = [])
     {
-      $this->logger->error($message, $context);
+        $this->logger->error($message, $context);
     }
 
     protected function validateDto(Request $request, string $dtoClass): object
@@ -51,7 +53,7 @@ abstract class BaseCrudController extends AbstractController
                 'json'
             );
         } catch (\Throwable $e) {
-            $this->logError('Invalid Json paylod', [''=> $dtoClass,'message'=> $e->getMessage()]);
+            $this->logError('Invalid Json paylod', ['' => $dtoClass, 'message' => $e->getMessage()]);
             throw new BadRequestHttpException('Invalid JSON payload');
         }
 
@@ -92,12 +94,9 @@ abstract class BaseCrudController extends AbstractController
         $repository = $this->getRepository();
 
         if (!method_exists($repository, 'create')) {
-            $this->logError('function create is mandatory', [''=> $dtoClass, 'entity'=> $this->entityClass()]);
+            $this->logError('function create is mandatory', ['' => $dtoClass, 'entity' => $this->entityClass()]);
 
-            throw new \LogicException(sprintf(
-                'Repository for "%s" must implement a create() method.',
-                $this->entityClass()
-            ));
+            throw new \LogicException(sprintf('Repository for "%s" must implement a create() method.', $this->entityClass()));
         }
 
         $entity = $repository->create($dto);
@@ -115,12 +114,9 @@ abstract class BaseCrudController extends AbstractController
         $repository = $this->getRepository();
 
         if (!method_exists($repository, 'update')) {
-            $this->logError('function update is mandatory', [''=> $dtoClass, 'entity'=> $this->entityClass()]);
+            $this->logError('function update is mandatory', ['' => $dtoClass, 'entity' => $this->entityClass()]);
 
-            throw new \LogicException(sprintf(
-                'Repository for "%s" must implement an update() method.',
-                $this->entityClass()
-            ));
+            throw new \LogicException(sprintf('Repository for "%s" must implement an update() method.', $this->entityClass()));
         }
         $model = $repository->find($id);
         $entity = $repository->update($model, $dto);

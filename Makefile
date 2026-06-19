@@ -4,7 +4,7 @@ APP = $(COMPOSE) exec app
 .PHONY: build up down restart shell install update composer console \
 	cache-clear cache-warmup logs serve \
 	entity migration migrate rollback schema-validate \
-	fixtures test routes debug-env reset-db
+	fixtures test routes debug-env reset-db tests
 
 build:
 	$(COMPOSE) build
@@ -94,3 +94,15 @@ api:
 
 fixture:
 	$(APP) php bin/console doctrine:fixtures:load --append --no-interaction
+
+pint:
+	$(APP) ./vendor/bin/pint --test
+
+pint-c:
+	$(APP) ./vendor/bin/pint
+
+pint-v:
+	$(APP) ./vendor/bin/pint --test -vv
+
+tests:
+	$(APP) php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests

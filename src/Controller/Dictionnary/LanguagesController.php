@@ -2,10 +2,10 @@
 
 namespace App\Controller\Dictionnary;
 
+use App\Controller\BaseCrudController;
 use App\Dto\Languages\Create;
 use App\Dto\Languages\Edit;
 use App\Entity\Languages;
-use App\Controller\BaseCrudController;
 
 final class LanguagesController extends BaseCrudController
 {
@@ -23,7 +23,6 @@ final class LanguagesController extends BaseCrudController
     {
         return Edit::class;
     }
-
 
     protected function getReadGroups(): array
     {
