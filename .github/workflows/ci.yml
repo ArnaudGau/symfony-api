@@ -1,4 +1,4 @@
-name: Fast Laravel CI
+name: Symfony CI
 
 on: [push, pull_request]
 
@@ -18,17 +18,16 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            src/vendor
+            vendor
             ~/.composer/cache
-          key: composer-${{ hashFiles('src/composer.lock') }}
+          key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install dependencies
-        working-directory: ./src
         run: composer install --no-interaction --prefer-dist --no-progress
 
+      # Ajout du -v pour voir le détail des erreurs si Pint échoue
       - name: Run Pint
-        working-directory: ./src
-        run: ./vendor/bin/pint --test
+        run: ./vendor/bin/pint --test -v
 
   test:
     runs-on: ubuntu-latest
@@ -45,23 +44,18 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            src/vendor
+            vendor
             ~/.composer/cache
-          key: composer-${{ hashFiles('src/composer.lock') }}
+          key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install dependencies
-        working-directory: ./src
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Prepare Laravel
-        working-directory: ./src
+      # Remplace le "Prepare Laravel" par la préparation de l'environnement Symfony
+      - name: Prepare Symfony Env
         run: |
-          cp .env.example .env
-          php artisan key:generate
+          echo "APP_ENV=test" > .env.local
 
+      # Commande de test standard pour Symfony (PHPUnit)
       - name: Run tests
-        working-directory: ./src
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
-        run: php artisan test --parallel
+        run: ./vendor/bin/phpunit
