@@ -19,7 +19,6 @@ class Languages
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-
     #[Groups(['language:read'])]
     private ?string $name = null;
 

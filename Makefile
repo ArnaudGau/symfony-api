@@ -94,3 +94,12 @@ api:
 
 fixture:
 	$(APP) php bin/console doctrine:fixtures:load --append --no-interaction
+
+test:
+	$(APP) ./vendor/bin/pint --test
+
+test-c:
+	$(APP) ./vendor/bin/pint
+
+test-v:
+	$(APP) ./vendor/bin/pint --test -vv
