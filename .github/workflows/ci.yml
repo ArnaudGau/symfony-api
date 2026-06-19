@@ -1,6 +1,6 @@
 name: Symfony CI
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   lint:
@@ -28,7 +28,6 @@ jobs:
           echo "APP_ENV=test" > .env
           echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
 
-       Tarifs
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
