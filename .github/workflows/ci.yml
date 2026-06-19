@@ -12,7 +12,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.3
 
       - name: Cache Composer
         uses: actions/cache@v4
@@ -23,9 +23,9 @@ jobs:
           key: composer-${{ hashFiles('composer.lock') }}
 
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
+        # --no-scripts bloque le cache:clear automatique ici
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
 
-      # Ajout du -v pour voir le détail des erreurs si Pint échoue
       - name: Run Pint
         run: ./vendor/bin/pint --test -v
 
@@ -38,7 +38,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.4
+          php-version: 8.3
 
       - name: Cache Composer
         uses: actions/cache@v4
@@ -48,14 +48,19 @@ jobs:
             ~/.composer/cache
           key: composer-${{ hashFiles('composer.lock') }}
 
-      - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --no-progress
-
-      # Remplace le "Prepare Laravel" par la préparation de l'environnement Symfony
+      # 1. On prépare l'environnement d'abord
       - name: Prepare Symfony Env
         run: |
-          echo "APP_ENV=test" > .env.dev
+          echo "APP_ENV=test" > .env.local
+          echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env.local
 
-      # Commande de test standard pour Symfony (PHPUnit)
+      # 2. On installe (on peut garder --no-scripts pour aller plus vite)
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
+
+      # 3. Si tes tests ont besoin du cache reconstruit proprement :
+      - name: Warmup Cache
+        run: php bin/console cache:clear --env=test
+
       - name: Run tests
         run: ./vendor/bin/phpunit
