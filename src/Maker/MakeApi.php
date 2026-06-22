@@ -2,23 +2,22 @@
 
 namespace App\Maker;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\MakerBundle\ConsoleStyle;
+use Symfony\Bundle\MakerBundle\DependencyBuilder;
 use Symfony\Bundle\MakerBundle\Generator;
 use Symfony\Bundle\MakerBundle\InputConfiguration;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Bundle\MakerBundle\DependencyBuilder;
-use Symfony\Bundle\MakerBundle\ConsoleStyle;
-use Doctrine\ORM\EntityManagerInterface;
-
-
 
 final class MakeApi extends AbstractMaker
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {}
+    ) {
+    }
 
     public function configureDependencies(DependencyBuilder $dependencies)
     {
@@ -54,14 +53,14 @@ final class MakeApi extends AbstractMaker
 
     private function getEntityCol(string $name)
     {
-        $entityClass = 'App\\Entity\\' . $name;
+        $entityClass = 'App\\Entity\\'.$name;
 
         $metadata = $this->entityManager->getClassMetadata($entityClass);
 
         $fields = [];
 
         foreach ($metadata->getFieldNames() as $fieldName) {
-            if ($fieldName === 'id') {
+            if ('id' === $fieldName) {
                 continue;
             }
 
@@ -81,11 +80,11 @@ final class MakeApi extends AbstractMaker
     public function generate(
         InputInterface $input,
         ConsoleStyle $io,
-        Generator $generator
+        Generator $generator,
     ): void {
         $name = ucfirst($input->getArgument('name'));
         $nameLower = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name));
-        $namePlural = $nameLower . 's';
+        $namePlural = $nameLower.'s';
         $fields = $this->getEntityCol($name);
 
         $vars = [
@@ -99,25 +98,25 @@ final class MakeApi extends AbstractMaker
 
         $generator->generateFile(
             "src/Controller/Api/{$name}Controller.php",
-            $base . '/templates/maker/api/controller.tpl.php',
+            $base.'/templates/maker/api/controller.tpl.php',
             $vars
         );
 
         $generator->generateFile(
             "src/Dto/{$name}/Create{$name}Dto.php",
-            $base . '/templates/maker/api/create_dto.tpl.php',
+            $base.'/templates/maker/api/create_dto.tpl.php',
             $vars
         );
 
         $generator->generateFile(
             "src/Dto/{$name}/Update{$name}Dto.php",
-            $base . '/templates/maker/api/update_dto.tpl.php',
+            $base.'/templates/maker/api/update_dto.tpl.php',
             $vars
         );
 
         $generator->generateFile(
             "config/routes/api/{$nameLower}.yaml",
-            $base . '/templates/maker/api/routes.yaml.tpl.php',
+            $base.'/templates/maker/api/routes.yaml.tpl.php',
             $vars
         );
 
