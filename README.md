@@ -144,6 +144,11 @@ languages:
     resource: 'routes/languages.yaml'
 ```
 
+dans security.yaml si vous avez des routes protégées n'oublié pas d'ajouter
+```php
+        - { path: ^/api/test, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
+```
+
 ### Base de donnees
 
 | Commande | Description |
