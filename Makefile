@@ -109,4 +109,6 @@ tests:
 
 resource:
 	$(APP) php bin/console make:entity $(name)
+	$(APP) php bin/console make:migration
+	$(APP) php bin/console doctrine:migrations:migrate --no-interaction
 	$(APP) php bin/console make:api $(name)
