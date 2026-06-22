@@ -4,7 +4,8 @@
         "var",
         "public",
         "bin",
-        "migrations"
+        "migrations",
+        "templates/maker"
     ],
     "notName": [
         "*.blade.php"

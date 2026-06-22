@@ -106,3 +106,7 @@ pint-v:
 
 tests:
 	$(APP) php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests
+
+resource:
+	$(APP) php bin/console make:entity $(name)
+	$(APP) php bin/console make:api $(name)
