@@ -4,12 +4,9 @@ namespace App\Dto\<?= $name ?>;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Create
+class Update
 {
 <?php foreach ($fields as $field): ?>
-<?php if (!$field['nullable']): ?>
-    #[Assert\NotBlank]
-<?php endif; ?>
 <?php if ($field['type'] === 'string' && isset($field['length'])): ?>
     #[Assert\Length(max: <?= $field['length'] ?>)]
 <?php endif; ?>
