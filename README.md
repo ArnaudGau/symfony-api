@@ -137,6 +137,13 @@ private ?string $code = null;
 
 Le nom du groupe doit correspondre a celui retourne par le controller genere dans `getReadGroups()`.
 
+Dans route.yml, ajouter les accès au nouveau fichier de route :
+```php
+languages:
+    prefix: /api
+    resource: 'routes/languages.yaml'
+```
+
 ### Base de donnees
 
 | Commande | Description |
