@@ -1,14 +1,19 @@
-// templates/maker/api/create_dto.tpl.php
 <?= "<?php\n" ?>
 
 namespace App\Dto\<?= $name ?>;
 
-final class Create<?= $name ?>Dto
+use Symfony\Component\Validator\Constraints as Assert;
+
+class Create
 {
-    public function __construct(
-        <?php foreach ($fields as $field): ?>
-            public <?= $field['nullable'] ? '?' : '' ?><?= $field['type'] ?> $<?= $field['name'] ?>,
-        <?php endforeach; ?>
-        ) {
-    }
+<?php foreach ($fields as $field): ?>
+<?php if (!$field['nullable']): ?>
+    #[Assert\NotBlank]
+<?php endif; ?>
+<?php if ($field['type'] === 'string' && isset($field['length'])): ?>
+    #[Assert\Length(max: <?= $field['length'] ?>)]
+<?php endif; ?>
+    public ?<?= $field['type'] ?> $<?= $field['name'] ?> = null;
+
+<?php endforeach; ?>
 }
