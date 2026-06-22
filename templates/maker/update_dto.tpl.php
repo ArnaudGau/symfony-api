@@ -4,7 +4,7 @@ namespace App\Dto\<?= $name ?>;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Update
+class Edit
 {
 <?php foreach ($fields as $field): ?>
 <?php if ($field['type'] === 'string' && isset($field['length'])): ?>

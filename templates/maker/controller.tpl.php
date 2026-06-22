@@ -1,16 +1,11 @@
-// templates/maker/api/controller.tpl.php
 <?= "<?php\n" ?>
 
 namespace App\Controller\Api;
 
-use App\Repository\<?= $name ?>Repository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use App\Dto\<?= $name ?>\Create
-use App\Dto\<?= $name ?>\Update
 use App\Controller\BaseCrudController;
-
+use App\Dto\<?= $name ?>\Create;
+use App\Dto\<?= $name ?>\Edit;
+use App\Entity\<?= $name ?>;
 
 final class <?= $name ?>Controller extends BaseCrudController
 {

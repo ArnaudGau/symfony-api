@@ -1,15 +1,10 @@
 api_<?= $nameLower ?>_index:
-    path: /api/<?= $namePlural ?>
+    path: /api/<?= $namePlural . "\n" ?>
     controller: App\Controller\Api\<?= $name ?>Controller::index
     methods: [GET]
 
-api_<?= $nameLower ?>_show:
-    path: /api/<?= $namePlural ?>/{id}
-    controller: App\Controller\Api\<?= $name ?>Controller::show
-    methods: [GET]
-
 api_<?= $nameLower ?>_create:
-    path: /api/<?= $namePlural ?>
+    path: /api/<?= $namePlural . "\n" ?>
     controller: App\Controller\Api\<?= $name ?>Controller::create
     methods: [POST]
 

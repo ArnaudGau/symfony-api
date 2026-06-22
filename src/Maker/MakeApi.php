@@ -97,25 +97,25 @@ final class MakeApi extends AbstractMaker
 
         $generator->generateFile(
             "src/Controller/Api/{$name}Controller.php",
-            $base.'/templates/maker/api/controller.tpl.php',
+            $base.'/templates/maker/controller.tpl.php',
             $vars
         );
 
         $generator->generateFile(
-            "src/Dto/{$name}/Create{$name}Dto.php",
-            $base.'/templates/maker/api/create_dto.tpl.php',
+            "src/Dto/{$name}/Create.php",
+            $base.'/templates/maker/create_dto.tpl.php',
             $vars
         );
 
         $generator->generateFile(
-            "src/Dto/{$name}/Update{$name}Dto.php",
-            $base.'/templates/maker/api/update_dto.tpl.php',
+            "src/Dto/{$name}/Edit.php",
+            $base.'/templates/maker/update_dto.tpl.php',
             $vars
         );
 
         $generator->generateFile(
             "config/routes/api/{$nameLower}.yaml",
-            $base.'/templates/maker/api/routes.yaml.tpl.php',
+            $base.'/templates/maker/routes.yaml.tpl.php',
             $vars
         );
 

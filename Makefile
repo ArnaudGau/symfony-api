@@ -108,5 +108,5 @@ tests:
 	$(APP) php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests
 
 resource:
-	php bin/console make:entity $(name)
-	php bin/console make:api $(name)
+	$(APP) php bin/console make:entity $(name)
+	$(APP) php bin/console make:api $(name)
