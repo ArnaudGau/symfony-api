@@ -21,7 +21,6 @@ final class MakeApi extends AbstractMaker
 
     public function configureDependencies(DependencyBuilder $dependencies)
     {
-        // Rien pour l’instant
     }
 
     public static function getCommandName(): string
