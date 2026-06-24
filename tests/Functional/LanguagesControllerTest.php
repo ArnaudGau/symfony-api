@@ -14,8 +14,8 @@ class LanguagesControllerTest extends BaseFunctionnalCase
         parent::setUp();
         $this->url = '/api/languages';
         $this->languages = [
-            'name' => 'Test language ',
-            'code' => 'te',
+            'name' => 'Test language ' . $this->faker->unique()->word(),
+            'code' => strtolower($this->faker->unique()->lexify('??')),
         ];
     }
 

@@ -2,21 +2,25 @@
 
 namespace App\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Tests\Helper\UserFactory;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use App\Entity\User;
+use App\Tests\Helper\UserFactory;
+use Doctrine\ORM\EntityManagerInterface;
+use Faker\Factory;
+use Faker\Generator;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 abstract class BaseFunctionnalCase extends WebTestCase
 {
     protected KernelBrowser $client;
     protected User $admin;
     protected User $user;
+    protected Generator $faker;
 
     public function setUp(): void
     {
         $this->client = static::createClient();
+        $this->faker = Factory::create('fr_FR');
         $this->admin = $this->persistUser(UserFactory::admin());
         $this->user = $this->persistUser(UserFactory::user());
     }
