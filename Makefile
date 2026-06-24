@@ -4,7 +4,7 @@ APP = $(COMPOSE) exec app
 .PHONY: build up down restart shell install update composer console \
 	cache-clear cache-warmup logs serve \
 	entity migration migrate rollback schema-validate \
-	fixtures test routes debug-env reset-db tests
+	fixtures test routes debug-env reset-db test-db-reset tests
 
 build:
 	$(COMPOSE) build
@@ -81,6 +81,10 @@ debug-env:
 test:
 	$(APP) php bin/phpunit
 
+test-db-reset:
+	$(APP) php bin/console doctrine:schema:drop --env=test --force --full-database
+	$(APP) php bin/console doctrine:schema:create --env=test
+
 # Reset base de données
 
 reset-db:
@@ -104,8 +108,8 @@ pint-c:
 pint-v:
 	$(APP) ./vendor/bin/pint --test -vv
 
-tests:
-	$(APP) php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests
+tests: test-db-reset
+	$(APP) php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests/Functional
 
 resource:
 	$(APP) php bin/console make:entity $(name)
