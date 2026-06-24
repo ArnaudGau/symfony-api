@@ -27,7 +27,7 @@ abstract class BaseFunctionnalCase extends WebTestCase
 
     private function persistUser($user)
     {
-        $user->setEmail(uniqid('', true) . '-' . $user->getEmail());
+        $user->setEmail(uniqid('', true).'-'.$user->getEmail());
 
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
@@ -42,6 +42,7 @@ abstract class BaseFunctionnalCase extends WebTestCase
         if (empty($headers)) {
             $headers = ['CONTENT_TYPE' => 'application/json'];
         }
+
         return $headers;
     }
 
@@ -50,14 +51,13 @@ abstract class BaseFunctionnalCase extends WebTestCase
         switch ($user) {
             case 'admin':
                 $this->client->loginUser($this->admin);
-            break;
+                break;
             case 'user':
                 $this->client->loginUser($this->user);
-            break;
+                break;
             default:
                 throw new \Exception('user role not excist');
         }
-
     }
 
     public function postClient(string $user, string $url, array $parameters = [], array $headers = [])

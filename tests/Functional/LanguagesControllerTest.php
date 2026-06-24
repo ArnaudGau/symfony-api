@@ -14,19 +14,19 @@ class LanguagesControllerTest extends BaseFunctionnalCase
         parent::setUp();
         $this->url = '/api/languages';
         $this->languages = [
-            'name' => 'Test language ' . $this->faker->unique()->word(),
+            'name' => 'Test language '.$this->faker->unique()->word(),
             'code' => strtolower($this->faker->unique()->lexify('??')),
         ];
     }
 
-    public function test_admin_can_create_language(): void
+    public function testAdminCanCreateLanguage(): void
     {
         $this->postClient('admin', $this->url, $this->languages);
 
         self::assertResponseStatusCodeSame(201);
     }
 
-    public function test_user_cannot_create_language(): void
+    public function testUserCannotCreateLanguage(): void
     {
         $this->postClient('user', $this->url, $this->languages);
 
