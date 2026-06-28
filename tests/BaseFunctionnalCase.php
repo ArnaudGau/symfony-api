@@ -16,10 +16,12 @@ abstract class BaseFunctionnalCase extends WebTestCase
     protected User $admin;
     protected User $user;
     protected Generator $faker;
+    protected EntityManagerInterface $entityManager;
 
     public function setUp(): void
     {
         $this->client = static::createClient();
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $this->faker = Factory::create('fr_FR');
         $this->admin = $this->persistUser(UserFactory::admin());
         $this->user = $this->persistUser(UserFactory::user());
@@ -29,10 +31,8 @@ abstract class BaseFunctionnalCase extends WebTestCase
     {
         $user->setEmail(uniqid('', true).'-'.$user->getEmail());
 
-        /** @var EntityManagerInterface $entityManager */
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         return $user;
     }
@@ -60,10 +60,24 @@ abstract class BaseFunctionnalCase extends WebTestCase
         }
     }
 
-    public function postClient(string $user, string $url, array $parameters = [], array $headers = [])
+    public function postUrl(string $user, string $url, array $parameters = [], array $headers = [])
     {
         $this->connectUser($user);
         $headers = $this->getheaders($headers);
         $this->client->request('POST', $url, [], [], $headers, json_encode($parameters));
+    }
+
+    public function putUrl(string $user, string $url, array $parameters = [], array $headers = [])
+    {
+       $this->connectUser($user);
+        $headers = $this->getheaders($headers);
+        $this->client->request('PUT', $url, [], [], $headers, json_encode($parameters));
+    }
+
+    public function getUrl(string $user, string $url, array $headers = [])
+    {
+        $this->connectUser($user);
+        $headers = $this->getheaders($headers);
+        $this->client->request('GET', $url, [], [], $headers);
     }
 }
