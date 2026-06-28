@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DictionnaryRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: DictionnaryRepository::class)]
 class Dictionnary
@@ -15,12 +16,15 @@ class Dictionnary
 
     #[ORM\ManyToOne(inversedBy: 'word')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['dictionnary:read'])]
     private ?Languages $language = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['dictionnary:read'])]
     private ?string $word = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['dictionnary:read'])]
     private ?string $translation = null;
 
     public function getId(): ?int

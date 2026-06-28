@@ -15,21 +15,21 @@ class Languages
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['language:read'])]
+    #[Groups(['language:read', 'dictionnary:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['language:read'])]
+    #[Groups(['language:read', 'dictionnary:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 3)]
-    #[Groups(['language:read'])]
+    #[Groups(['language:read', 'dictionnary:read'])]
     private ?string $code = null;
 
     /**
      * @var Collection<int, Dictionnary>
      */
-    #[ORM\OneToMany(targetEntity: Dictionnary::class, mappedBy: 'language_id')]
+    #[ORM\OneToMany(targetEntity: Dictionnary::class, mappedBy: 'language')]
     private Collection $word;
 
     public function __construct()

@@ -13,3 +13,7 @@ controllers:
 languages:
     prefix: /api
     resource: 'routes/languages.yaml'
+
+dictionnary:
+    prefix: /api
+    resource: 'routes/dictionnary.yaml'

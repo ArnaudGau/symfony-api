@@ -43,6 +43,8 @@ security:
         - { path: ^/api/admin, roles: ROLE_ADMIN }
         - { path: ^/api/languages, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
         - { path: ^/api, roles: ROLE_USER }
+        - { path: ^/api/dictionnary, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
+
 
 when@test:
     security:
