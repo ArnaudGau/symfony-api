@@ -1,0 +1,16 @@
+dictionnary_index:
+  path: /dictionnary
+  controller: App\Controller\Dictionnary\DictionnaryController::index
+  methods: GET
+dictionnary_create:
+  path: /dictionnary
+  controller: App\Controller\Dictionnary\DictionnaryController::create
+  methods: POST
+dictionnary_update:
+  path: /dictionnary/{id}
+  controller: App\Controller\Dictionnary\DictionnaryController::update
+  methods: PUT
+dictionnary_delete:
+  path: /dictionnary/{id}
+  controller: App\Controller\Dictionnary\DictionnaryController::delete
+  methods: DELETE
