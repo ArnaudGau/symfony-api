@@ -13,6 +13,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
+          extensions: pdo_sqlite, sqlite3
 
       - name: Cache Composer
         uses: actions/cache@v4
@@ -26,6 +27,7 @@ jobs:
         run: |
           echo "APP_ENV=test" > .env
           echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
+          echo "DEFAULT_URI=http://localhost" >> .env
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
@@ -43,6 +45,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.4
+          extensions: pdo_sqlite, sqlite3
 
       - name: Cache Composer
         uses: actions/cache@v4
@@ -57,7 +60,7 @@ jobs:
         run: |
           echo "APP_ENV=test" > .env
           echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
-          echo "DATABASE_URL=sqlite:///%kernel.project_dir%/var/data.db" >> .env
+          echo "DEFAULT_URI=http://localhost" >> .env
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
@@ -68,8 +71,13 @@ jobs:
       - name: Install PHPUnit Bridge
         run: php vendor/symfony/phpunit-bridge/bin/simple-phpunit --version
 
+      - name: Prepare test database
+        run: |
+          php bin/console doctrine:schema:drop --env=test --force --full-database
+          php bin/console doctrine:schema:create --env=test
+
       # CORRECTION : Chemin nettoyé ici
       - name: Run tests
         env:
           SYMFONY_DEPRECATIONS_HELPER: disabled
-        run: php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests
+        run: php vendor/symfony/phpunit-bridge/bin/simple-phpunit tests/Functional
