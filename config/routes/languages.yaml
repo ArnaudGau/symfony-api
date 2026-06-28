@@ -1,0 +1,16 @@
+language_index:
+  path: /languages
+  controller: App\Controller\Dictionnary\LanguagesController::index
+  methods: GET
+language_create:
+  path: /languages
+  controller: App\Controller\Dictionnary\LanguagesController::create
+  methods: POST
+language_update:
+  path: /languages/{id}
+  controller: App\Controller\Dictionnary\LanguagesController::update
+  methods: PUT
+language_delete:
+  path: /languages/{id}
+  controller: App\Controller\Dictionnary\LanguagesController::delete
+  methods: DELETE
