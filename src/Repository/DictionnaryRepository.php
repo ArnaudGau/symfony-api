@@ -54,6 +54,7 @@ class DictionnaryRepository extends ServiceEntityRepository
 
         return $dictionnary;
     }
+
     //    /**
     //     * @return Dictionnary[] Returns an array of Dictionnary objects
     //     */

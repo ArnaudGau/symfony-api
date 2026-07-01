@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\DictionnaryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -12,20 +14,32 @@ class Dictionnary
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'word')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['dictionnary:read'])]
+    #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?Languages $language = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['dictionnary:read'])]
+    #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?string $word = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['dictionnary:read'])]
+    #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?string $translation = null;
+
+    /**
+     * @var Collection<int, DictionnaryUser>
+     */
+    #[ORM\OneToMany(targetEntity: DictionnaryUser::class, mappedBy: 'dictionnary')]
+    private Collection $dictionnaryUsers;
+
+    public function __construct()
+    {
+        $this->dictionnaryUsers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -64,6 +78,36 @@ class Dictionnary
     public function setTranslation(string $translation): static
     {
         $this->translation = $translation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, DictionnaryUser>
+     */
+    public function getDictionnaryUsers(): Collection
+    {
+        return $this->dictionnaryUsers;
+    }
+
+    public function addDictionnaryUser(DictionnaryUser $dictionnaryUser): static
+    {
+        if (!$this->dictionnaryUsers->contains($dictionnaryUser)) {
+            $this->dictionnaryUsers->add($dictionnaryUser);
+            $dictionnaryUser->setDictionnary($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDictionnaryUser(DictionnaryUser $dictionnaryUser): static
+    {
+        if ($this->dictionnaryUsers->removeElement($dictionnaryUser)) {
+            // set the owning side to null (unless already changed)
+            if ($dictionnaryUser->getDictionnary() === $this) {
+                $dictionnaryUser->setDictionnary(null);
+            }
+        }
 
         return $this;
     }
