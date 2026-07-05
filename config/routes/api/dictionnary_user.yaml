@@ -1,0 +1,24 @@
+api_dictionnary_user_index:
+    path: /dictionnary_users
+    controller: App\Controller\Dictionnary\DictionnaryUserController::index
+    methods: [GET]
+
+api_dictionnary_user_create:
+    path: /dictionnary_users
+    controller: App\Controller\Dictionnary\DictionnaryUserController::create
+    methods: [POST]
+
+api_dictionnary_user_update:
+    path: /dictionnary_users/{id}
+    controller: App\Controller\Dictionnary\DictionnaryUserController::update
+    methods: [PUT]
+
+api_dictionnary_user_delete:
+    path: /dictionnary_users/{id}
+    controller: App\Controller\Dictionnary\DictionnaryUserController::delete
+    methods: [DELETE]
+
+api_dictionnary_user_answer:
+    path: /dictionnary_users/answer
+    controller: App\Controller\Dictionnary\DictionnaryUserController::answer
+    methods: [POST]

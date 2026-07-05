@@ -44,6 +44,7 @@ security:
         - { path: ^/api/languages, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
         - { path: ^/api, roles: ROLE_USER }
         - { path: ^/api/dictionnary, roles: ROLE_ADMIN, methods: [POST, PUT, DELETE] }
+        - { path: ^/api/dictionnary_users, roles: ROLE_ADMIN, methods: [DELETE] }
 
 
 when@test:
