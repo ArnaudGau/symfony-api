@@ -22,6 +22,11 @@ class Dictionnary
     #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?Languages $language = null;
 
+    #[ORM\ManyToOne(inversedBy: 'dictionnaries')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
+    private ?Category $category = null;
+
     #[ORM\Column(length: 255)]
     #[Groups(['dictionnary:read', 'dictionnary_user:read'])]
     private ?string $word = null;
@@ -54,6 +59,18 @@ class Dictionnary
     public function setLanguage(?Languages $language): static
     {
         $this->language = $language;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): static
+    {
+        $this->category = $category;
 
         return $this;
     }

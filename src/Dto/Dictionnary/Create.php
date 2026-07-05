@@ -11,6 +11,10 @@ class Create
     public ?int $language_id = null;
 
     #[Assert\NotBlank]
+    #[Assert\Type('integer')]
+    public ?int $category_id = null;
+
+    #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     public ?string $word = null;
 
