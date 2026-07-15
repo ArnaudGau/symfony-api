@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Dictionnary;
 use App\Entity\Languages;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -30,6 +31,13 @@ class DictionnaryRepository extends ServiceEntityRepository
 
         // 2. On l'associe
         $dictionnary->setLanguage($language);
+        $category = $this->getEntityManager()->getRepository(Category::class)->find($dto->category_id);
+
+        if (!$category) {
+            throw new \InvalidArgumentException("La categorie avec l'ID {$dto->category_id} n'existe pas.");
+        }
+
+        $dictionnary->setCategory($category);
 
         $this->getEntityManager()->persist($dictionnary);
         $this->getEntityManager()->flush();
@@ -49,6 +57,13 @@ class DictionnaryRepository extends ServiceEntityRepository
 
         // 2. On l'associe
         $dictionnary->setLanguage($language);
+        $category = $this->getEntityManager()->getRepository(Category::class)->find($dto->category_id);
+
+        if (!$category) {
+            throw new \InvalidArgumentException("La categorie avec l'ID {$dto->category_id} n'existe pas.");
+        }
+
+        $dictionnary->setCategory($category);
 
         $this->getEntityManager()->flush();
 

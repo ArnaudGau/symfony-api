@@ -1,0 +1,16 @@
+category_index:
+  path: /dictionnary_categories
+  controller: App\Controller\Dictionnary\CategoryController::index
+  methods: GET
+category_create:
+  path: /dictionnary_categories
+  controller: App\Controller\Dictionnary\CategoryController::create
+  methods: POST
+category_update:
+  path: /dictionnary_categories/{id}
+  controller: App\Controller\Dictionnary\CategoryController::update
+  methods: PUT
+category_delete:
+  path: /dictionnary_categories/{id}
+  controller: App\Controller\Dictionnary\CategoryController::delete
+  methods: DELETE

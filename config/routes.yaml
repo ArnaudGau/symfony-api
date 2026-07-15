@@ -14,6 +14,10 @@ languages:
     prefix: /api
     resource: 'routes/languages.yaml'
 
+category:
+    prefix: /api
+    resource: 'routes/category.yaml'
+
 dictionnary:
     prefix: /api
     resource: 'routes/dictionnary.yaml'

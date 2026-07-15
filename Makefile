@@ -116,3 +116,9 @@ resource:
 	$(APP) php bin/console make:migration
 	$(APP) php bin/console doctrine:migrations:migrate --no-interaction
 	$(APP) php bin/console make:api $(name)
+
+fixture:
+	$(APP) php bin/console make:fixture
+
+fixture-l:
+	$(APP) php bin/console doctrine:fixtures:load --append
