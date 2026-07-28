@@ -57,10 +57,7 @@ jobs:
 
       # REAJOUT : Nécessaire pour le dump-env juste après
       - name: Create baseline .env
-        run: |
-          echo "APP_ENV=test" > .env
-          echo "APP_SECRET=67d3a393e185088c4b6c31f6df2b8fbc" >> .env
-          echo "DEFAULT_URI=http://localhost" >> .env
+        run: cp .env.test .env
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress --no-scripts
