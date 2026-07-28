@@ -2,7 +2,6 @@
 
 namespace App\Service\Igdb;
 
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -49,7 +48,7 @@ final class IgdbService
             ],
         );
 
-        if ($response->getStatusCode() === 401 && $retry) {
+        if (401 === $response->getStatusCode() && $retry) {
             $this->authService->clearAccessToken();
 
             return $this->request($endpoint, $body, false);

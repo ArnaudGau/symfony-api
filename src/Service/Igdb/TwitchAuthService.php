@@ -38,9 +38,7 @@ final class TwitchAuthService
                 $data = $response->toArray();
 
                 if (!isset($data['access_token'], $data['expires_in'])) {
-                    throw new \RuntimeException(
-                        'Impossible de récupérer le token Twitch.',
-                    );
+                    throw new \RuntimeException('Impossible de récupérer le token Twitch.');
                 }
 
                 // Petite marge avant l’expiration réelle.
