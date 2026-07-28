@@ -11,7 +11,8 @@ class GameEditorFixtures extends Fixture
 {
     public function __construct(
         private GameEditorRepository $gameEditorRepository,
-    ) {}
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {

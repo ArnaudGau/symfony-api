@@ -25,3 +25,7 @@ dictionnary:
 game-editor:
     prefix: /api
     resource: 'routes/api/game_editor.yaml'
+
+game-developer:
+    prefix: /api
+    resource: 'routes/api/game_developer.yaml'
