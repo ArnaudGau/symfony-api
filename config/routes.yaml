@@ -21,3 +21,7 @@ category:
 dictionnary:
     prefix: /api
     resource: 'routes/dictionnary.yaml'
+
+game-editor:
+    prefix: /api
+    resource: 'routes/api/game_editor.yaml'
