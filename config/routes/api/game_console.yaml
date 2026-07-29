@@ -1,0 +1,19 @@
+api_game_console_index:
+    path: /game_consoles
+    controller: App\Controller\Api\GameConsoleController::index
+    methods: [GET]
+
+api_game_console_create:
+    path: /game_consoles
+    controller: App\Controller\Api\GameConsoleController::create
+    methods: [POST]
+
+api_game_console_update:
+    path: /game_consoles/{id}
+    controller: App\Controller\Api\GameConsoleController::update
+    methods: [PUT]
+
+api_game_console_delete:
+    path: /game_consoles/{id}
+    controller: App\Controller\Api\GameConsoleController::delete
+    methods: [DELETE]

@@ -40,8 +40,8 @@ class GameDeveloperFixtures extends Fixture
         ];
 
         foreach ($array as $key => $value) {
-            $existingGameEditor = $this->gameDeveloperRepository->findOneBy(['name' => $value]);
-            if (!$existingGameEditor) {
+            $existingGameDeveloper = $this->gameDeveloperRepository->findOneBy(['name' => $value]);
+            if (!$existingGameDeveloper) {
                 $gameDeveloper = new GameDeveloper();
 
                 $gameDeveloper->setName($value);

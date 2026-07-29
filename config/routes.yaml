@@ -29,3 +29,7 @@ game-editor:
 game-developer:
     prefix: /api
     resource: 'routes/api/game_developer.yaml'
+
+game-console:
+    prefix: /api
+    resource: 'routes/api/game_console.yaml'
