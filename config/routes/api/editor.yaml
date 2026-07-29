@@ -1,0 +1,19 @@
+api_editor_index:
+    path: /editors
+    controller: App\Controller\Api\EditorController::index
+    methods: [GET]
+
+api_editor_create:
+    path: /editors
+    controller: App\Controller\Api\EditorController::create
+    methods: [POST]
+
+api_editor_update:
+    path: /editors/{id}
+    controller: App\Controller\Api\EditorController::update
+    methods: [PUT]
+
+api_editor_delete:
+    path: /editors/{id}
+    controller: App\Controller\Api\EditorController::delete
+    methods: [DELETE]

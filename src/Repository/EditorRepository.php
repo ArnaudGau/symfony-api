@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\GameEditor;
+use App\Entity\Editor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<GameEditor>
+ * @extends ServiceEntityRepository<Editor>
  */
-class GameEditorRepository extends ServiceEntityRepository
+class EditorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GameEditor::class);
+        parent::__construct($registry, Editor::class);
     }
 
-    public function create($dto): GameEditor
+    public function create($dto): Editor
     {
-        $gameEditor = new GameEditor();
-        $gameEditor->setName($dto->name);
-        $this->getEntityManager()->persist($gameEditor);
+        $editor = new Editor();
+        $editor->setName($dto->name);
+        $this->getEntityManager()->persist($editor);
         $this->getEntityManager()->flush();
 
-        return $gameEditor;
+        return $editor;
     }
 
-    public function update(GameEditor $gameEditor, $dto): GameEditor
+    public function update(Editor $editor, $dto): Editor
     {
-        $gameEditor->setName($dto->name);
+        $editor->setName($dto->name);
         $this->getEntityManager()->flush();
 
-        return $gameEditor;
+        return $editor;
     }
     //    /**
-    //     * @return GameEditor[] Returns an array of GameEditor objects
+    //     * @return Editor[] Returns an array of Editor objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -48,7 +48,7 @@ class GameEditorRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?GameEditor
+    //    public function findOneBySomeField($value): ?Editor
     //    {
     //        return $this->createQueryBuilder('g')
     //            ->andWhere('g.exampleField = :val')
