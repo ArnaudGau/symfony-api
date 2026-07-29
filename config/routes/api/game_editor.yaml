@@ -1,0 +1,19 @@
+api_game_editor_index:
+    path: /game_editors
+    controller: App\Controller\Api\GameEditorController::index
+    methods: [GET]
+
+api_game_editor_create:
+    path: /game_editors
+    controller: App\Controller\Api\GameEditorController::create
+    methods: [POST]
+
+api_game_editor_update:
+    path: /game_editors/{id}
+    controller: App\Controller\Api\GameEditorController::update
+    methods: [PUT]
+
+api_game_editor_delete:
+    path: /game_editors/{id}
+    controller: App\Controller\Api\GameEditorController::delete
+    methods: [DELETE]

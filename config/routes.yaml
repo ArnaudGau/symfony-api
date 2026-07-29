@@ -21,3 +21,15 @@ category:
 dictionnary:
     prefix: /api
     resource: 'routes/dictionnary.yaml'
+
+game-editor:
+    prefix: /api
+    resource: 'routes/api/game_editor.yaml'
+
+game-developer:
+    prefix: /api
+    resource: 'routes/api/game_developer.yaml'
+
+game-console:
+    prefix: /api
+    resource: 'routes/api/game_console.yaml'

@@ -96,7 +96,7 @@ reset-db:
 api:
 	$(APP) php bin/console make:controller --no-template $(name)
 
-fixture:
+fixture-a:
 	$(APP) php bin/console doctrine:fixtures:load --append --no-interaction
 
 pint:
