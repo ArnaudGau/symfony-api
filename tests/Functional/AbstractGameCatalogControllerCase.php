@@ -73,7 +73,7 @@ abstract class AbstractGameCatalogControllerCase extends BaseFunctionnalCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-            $payload === [] ? null : json_encode($payload, JSON_THROW_ON_ERROR),
+            [] === $payload ? null : json_encode($payload, JSON_THROW_ON_ERROR),
         );
     }
 

@@ -30,7 +30,7 @@ abstract class BaseFunctionnalCase extends WebTestCase
 
     private function persistUser($user)
     {
-        $user->setEmail(uniqid('', true) . '-' . $user->getEmail());
+        $user->setEmail(uniqid('', true).'-'.$user->getEmail());
 
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
