@@ -12,16 +12,17 @@ class Edit
     #[Assert\Length(max: 255)]
     public ?string $cover = null;
 
-    #[Assert\Positive]
+    #[Assert\PositiveOrZero]
     public ?float $price = null;
 
-    #[Assert\Positive]
+    #[Assert\Range(min: 0, max: 5)]
     public ?int $rating = null;
 
-    #[Assert\Type('integer')]
-    public ?int $console_id = null;
+    #[Assert\Positive]
+    public ?int $consoleId = null;
 
     #[Assert\Count(min: 1)]
+    #[Assert\Unique]
     #[Assert\All([
         new Assert\Type('integer'),
         new Assert\Positive(),
@@ -29,6 +30,7 @@ class Edit
     public array $editorIds = [];
 
     #[Assert\Count(min: 1)]
+    #[Assert\Unique]
     #[Assert\All([
         new Assert\Type('integer'),
         new Assert\Positive(),
