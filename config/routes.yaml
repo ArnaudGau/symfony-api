@@ -33,3 +33,7 @@ developer:
 game-console:
     prefix: /api
     resource: 'routes/api/game_console.yaml'
+
+game:
+    prefix: /api
+    resource: 'routes/api/video_game.yaml'

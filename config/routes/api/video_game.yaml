@@ -1,0 +1,19 @@
+api_video_game_index:
+    path: /video_games
+    controller: App\Controller\Api\VideoGameController::index
+    methods: [GET]
+
+api_video_game_create:
+    path: /video_games
+    controller: App\Controller\Api\VideoGameController::create
+    methods: [POST]
+
+api_video_game_update:
+    path: /video_games/{id}
+    controller: App\Controller\Api\VideoGameController::update
+    methods: [PUT]
+
+api_video_game_delete:
+    path: /video_games/{id}
+    controller: App\Controller\Api\VideoGameController::delete
+    methods: [DELETE]

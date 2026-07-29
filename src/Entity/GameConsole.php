@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\GameConsoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: GameConsoleRepository::class)]
 class GameConsole
@@ -14,7 +17,19 @@ class GameConsole
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['gameConsole:read'])]
     private ?string $name = null;
+
+    /**
+     * @var Collection<int, VideoGame>
+     */
+    #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'console')]
+    private Collection $videoGames;
+
+    public function __construct()
+    {
+        $this->videoGames = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -29,6 +44,36 @@ class GameConsole
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoGame>
+     */
+    public function getVideoGames(): Collection
+    {
+        return $this->videoGames;
+    }
+
+    public function addVideoGame(VideoGame $videoGame): static
+    {
+        if (!$this->videoGames->contains($videoGame)) {
+            $this->videoGames->add($videoGame);
+            $videoGame->setConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoGame(VideoGame $videoGame): static
+    {
+        if ($this->videoGames->removeElement($videoGame)) {
+            // set the owning side to null (unless already changed)
+            if ($videoGame->getConsole() === $this) {
+                $videoGame->setConsole(null);
+            }
+        }
 
         return $this;
     }
