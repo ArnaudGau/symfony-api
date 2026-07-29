@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\GameDeveloper;
+use App\Entity\Developer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<GameDeveloper>
+ * @extends ServiceEntityRepository<Developer>
  */
-class GameDeveloperRepository extends ServiceEntityRepository
+class DeveloperRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, GameDeveloper::class);
+        parent::__construct($registry, Developer::class);
     }
 
-    public function create($dto): GameDeveloper
+    public function create($dto): Developer
     {
-        $gameDeveloper = new GameDeveloper();
-        $gameDeveloper->setName($dto->name);
-        $this->getEntityManager()->persist($gameDeveloper);
+        $developer = new Developer();
+        $developer->setName($dto->name);
+        $this->getEntityManager()->persist($developer);
         $this->getEntityManager()->flush();
 
-        return $gameDeveloper;
+        return $developer;
     }
 
-    public function update(GameDeveloper $gameDeveloper, $dto): GameDeveloper
+    public function update(Developer $developer, $dto): Developer
     {
-        $gameDeveloper->setName($dto->name);
+        $developer->setName($dto->name);
         $this->getEntityManager()->flush();
 
-        return $gameDeveloper;
+        return $developer;
     }
     //    /**
-    //     * @return GameDeveloper[] Returns an array of GameDeveloper objects
+    //     * @return Developer[] Returns an array of Developer objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -48,7 +48,7 @@ class GameDeveloperRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?GameDeveloper
+    //    public function findOneBySomeField($value): ?Developer
     //    {
     //        return $this->createQueryBuilder('g')
     //            ->andWhere('g.exampleField = :val')

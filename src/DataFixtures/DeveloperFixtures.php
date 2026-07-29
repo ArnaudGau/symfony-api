@@ -2,15 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\GameDeveloper;
-use App\Repository\GameDeveloperRepository;
+use App\Entity\Developer;
+use App\Repository\DeveloperRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class GameDeveloperFixtures extends Fixture
+class DeveloperFixtures extends Fixture
 {
     public function __construct(
-        private GameDeveloperRepository $gameDeveloperRepository,
+        private DeveloperRepository $developerRepository,
     ) {
     }
 
@@ -40,12 +40,12 @@ class GameDeveloperFixtures extends Fixture
         ];
 
         foreach ($array as $key => $value) {
-            $existingGameDeveloper = $this->gameDeveloperRepository->findOneBy(['name' => $value]);
-            if (!$existingGameDeveloper) {
-                $gameDeveloper = new GameDeveloper();
+            $existingDeveloper = $this->developerRepository->findOneBy(['name' => $value]);
+            if (!$existingDeveloper) {
+                $developer = new Developer();
 
-                $gameDeveloper->setName($value);
-                $manager->persist($gameDeveloper);
+                $developer->setName($value);
+                $manager->persist($developer);
             }
         }
 

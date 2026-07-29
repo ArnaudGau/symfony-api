@@ -3,15 +3,15 @@
 namespace App\Controller\Api;
 
 use App\Controller\BaseCrudController;
-use App\Dto\GameEditor\Create;
-use App\Dto\GameEditor\Edit;
-use App\Entity\GameEditor;
+use App\Dto\Developer\Create;
+use App\Dto\Developer\Edit;
+use App\Entity\Developer;
 
-final class GameEditorController extends BaseCrudController
+final class DeveloperController extends BaseCrudController
 {
     protected function entityClass(): string
     {
-        return GameEditor::class;
+        return Developer::class;
     }
 
     protected function getDtoCreate(): string
@@ -26,6 +26,6 @@ final class GameEditorController extends BaseCrudController
 
     protected function getReadGroups(): array
     {
-        return ['game_editor:read'];
+        return ['developer:read'];
     }
 }

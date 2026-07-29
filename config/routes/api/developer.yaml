@@ -1,0 +1,19 @@
+api_developer_index:
+    path: /developers
+    controller: App\Controller\Api\DeveloperController::index
+    methods: [GET]
+
+api_developer_create:
+    path: /developers
+    controller: App\Controller\Api\DeveloperController::create
+    methods: [POST]
+
+api_developer_update:
+    path: /developers/{id}
+    controller: App\Controller\Api\DeveloperController::update
+    methods: [PUT]
+
+api_developer_delete:
+    path: /developers/{id}
+    controller: App\Controller\Api\DeveloperController::delete
+    methods: [DELETE]

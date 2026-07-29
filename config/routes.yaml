@@ -22,13 +22,13 @@ dictionnary:
     prefix: /api
     resource: 'routes/dictionnary.yaml'
 
-game-editor:
+editor:
     prefix: /api
-    resource: 'routes/api/game_editor.yaml'
+    resource: 'routes/api/editor.yaml'
 
-game-developer:
+developer:
     prefix: /api
-    resource: 'routes/api/game_developer.yaml'
+    resource: 'routes/api/developer.yaml'
 
 game-console:
     prefix: /api

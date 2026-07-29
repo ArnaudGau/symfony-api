@@ -2,15 +2,15 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\GameEditor;
-use App\Repository\GameEditorRepository;
+use App\Entity\Editor;
+use App\Repository\EditorRepository;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
-class GameEditorFixtures extends Fixture
+class EditorFixtures extends Fixture
 {
     public function __construct(
-        private GameEditorRepository $gameEditorRepository,
+        private EditorRepository $editorRepository,
     ) {
     }
 
@@ -40,12 +40,12 @@ class GameEditorFixtures extends Fixture
         ];
 
         foreach ($array as $key => $value) {
-            $existingGameEditor = $this->gameEditorRepository->findOneBy(['name' => $value]);
-            if (!$existingGameEditor) {
-                $gameEditor = new GameEditor();
+            $existingEditor = $this->editorRepository->findOneBy(['name' => $value]);
+            if (!$existingEditor) {
+                $editor = new Editor();
 
-                $gameEditor->setName($value);
-                $manager->persist($gameEditor);
+                $editor->setName($value);
+                $manager->persist($editor);
             }
         }
 
