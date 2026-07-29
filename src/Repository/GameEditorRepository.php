@@ -16,6 +16,23 @@ class GameEditorRepository extends ServiceEntityRepository
         parent::__construct($registry, GameEditor::class);
     }
 
+    public function create($dto): GameEditor
+    {
+        $gameEditor = new GameEditor();
+        $gameEditor->setName($dto->name);
+        $this->getEntityManager()->persist($gameEditor);
+        $this->getEntityManager()->flush();
+
+        return $gameEditor;
+    }
+
+    public function update(GameEditor $gameEditor, $dto): GameEditor
+    {
+        $gameEditor->setName($dto->name);
+        $this->getEntityManager()->flush();
+
+        return $gameEditor;
+    }
     //    /**
     //     * @return GameEditor[] Returns an array of GameEditor objects
     //     */

@@ -19,7 +19,10 @@ abstract class BaseFunctionnalCase extends WebTestCase
 
     public function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = static::createClient([
+            'environment' => 'test',
+            'debug' => false,
+        ]);
         $this->faker = Factory::create('fr_FR');
         $this->admin = $this->persistUser(UserFactory::admin());
         $this->user = $this->persistUser(UserFactory::user());
