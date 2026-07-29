@@ -16,6 +16,23 @@ class GameConsoleRepository extends ServiceEntityRepository
         parent::__construct($registry, GameConsole::class);
     }
 
+    public function create($dto): GameConsole
+    {
+        $gameConsole = new GameConsole();
+        $gameConsole->setName($dto->name);
+        $this->getEntityManager()->persist($gameConsole);
+        $this->getEntityManager()->flush();
+
+        return $gameConsole;
+    }
+
+    public function update(GameConsole $gameConsole, $dto): GameConsole
+    {
+        $gameConsole->setName($dto->name);
+        $this->getEntityManager()->flush();
+
+        return $gameConsole;
+    }
     //    /**
     //     * @return GameConsole[] Returns an array of GameConsole objects
     //     */

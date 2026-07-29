@@ -1,0 +1,5 @@
+services:
+    Psr\Log\NullLogger: ~
+
+    logger:
+        alias: Psr\Log\NullLogger

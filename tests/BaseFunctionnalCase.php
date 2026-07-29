@@ -19,7 +19,10 @@ abstract class BaseFunctionnalCase extends WebTestCase
 
     public function setUp(): void
     {
-        $this->client = static::createClient();
+        $this->client = static::createClient([
+            'environment' => 'test',
+            'debug' => false,
+        ]);
         $this->faker = Factory::create('fr_FR');
         $this->admin = $this->persistUser(UserFactory::admin());
         $this->user = $this->persistUser(UserFactory::user());
@@ -27,7 +30,7 @@ abstract class BaseFunctionnalCase extends WebTestCase
 
     private function persistUser($user)
     {
-        $user->setEmail(uniqid('', true).'-'.$user->getEmail());
+        $user->setEmail(uniqid('', true) . '-' . $user->getEmail());
 
         /** @var EntityManagerInterface $entityManager */
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
