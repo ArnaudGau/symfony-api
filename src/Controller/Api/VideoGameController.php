@@ -52,7 +52,7 @@ final class VideoGameController extends BaseCrudController
     {
         return [
             'video_game:read',
-            'gameConsole:read',
+            'game_console:read',
             'developer:read',
             'editor:read',
         ];

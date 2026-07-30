@@ -124,6 +124,12 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
         );
 
         self::assertResponseStatusCodeSame(201);
+        $response = json_decode(
+            $this->client->getResponse()->getContent(),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        self::assertSame('PlayStation 5', $response['consoles'][0]['name']);
 
         $videoGame = $this->entityManager()
             ->getRepository(VideoGame::class)
