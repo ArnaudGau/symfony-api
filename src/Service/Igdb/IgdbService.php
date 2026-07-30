@@ -28,6 +28,18 @@ final class IgdbService
         return $response->toArray();
     }
 
+    public function findById(int $igdbId): ?array
+    {
+        $query = sprintf(
+            'fields id,name,summary,rating,cover.image_id,platforms.id,platforms.name,involved_companies.company.id,involved_companies.company.name,involved_companies.developer,involved_companies.publisher; where id = %d; limit 1;',
+            $igdbId,
+        );
+
+        $games = $this->request('/games', $query)->toArray();
+
+        return $games[0] ?? null;
+    }
+
     private function request(
         string $endpoint,
         string $body,

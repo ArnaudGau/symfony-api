@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\GameConsoleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: GameConsoleRepository::class)]
 class GameConsole
@@ -11,10 +14,27 @@ class GameConsole
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['gameConsole:read'])]
     private ?int $id = null;
 
+    #[ORM\Column(nullable: true, unique: true)]
+    #[Groups(['gameConsole:read'])]
+    private ?int $igdbId = null;
+
     #[ORM\Column(length: 255)]
+    #[Groups(['gameConsole:read'])]
     private ?string $name = null;
+
+    /**
+     * @var Collection<int, VideoGame>
+     */
+    #[ORM\ManyToMany(targetEntity: VideoGame::class, mappedBy: 'consoles')]
+    private Collection $videoGames;
+
+    public function __construct()
+    {
+        $this->videoGames = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -26,9 +46,48 @@ class GameConsole
         return $this->name;
     }
 
+    public function getIgdbId(): ?int
+    {
+        return $this->igdbId;
+    }
+
+    public function setIgdbId(int $igdbId): static
+    {
+        $this->igdbId = $igdbId;
+
+        return $this;
+    }
+
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoGame>
+     */
+    public function getVideoGames(): Collection
+    {
+        return $this->videoGames;
+    }
+
+    public function addVideoGame(VideoGame $videoGame): static
+    {
+        if (!$this->videoGames->contains($videoGame)) {
+            $this->videoGames->add($videoGame);
+            $videoGame->addConsole($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoGame(VideoGame $videoGame): static
+    {
+        if ($this->videoGames->removeElement($videoGame)) {
+            $videoGame->removeConsole($this);
+        }
 
         return $this;
     }
