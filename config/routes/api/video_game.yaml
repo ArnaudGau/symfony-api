@@ -18,6 +18,11 @@ api_video_game_igdb_import:
     controller: App\Controller\Api\VideoGameController::createByIgdb
     methods: [POST]
 
+api_video_game_igdb_show:
+    path: /video_games/show/{id}
+    controller: App\Controller\Api\VideoGameController::show
+    methods: [GET]
+
 api_video_game_update:
     path: /video_games/update/{id}
     controller: App\Controller\Api\VideoGameController::update

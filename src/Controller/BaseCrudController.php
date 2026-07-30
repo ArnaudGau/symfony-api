@@ -86,6 +86,15 @@ abstract class BaseCrudController extends AbstractController
         ]);
     }
 
+    public function show(int $id): JsonResponse
+    {
+        $entities = $this->getRepository()->find($id);
+
+        return $this->json($entities, 200, [], [
+            'groups' => $this->getReadGroups(),
+        ]);
+    }
+
     public function create(Request $request): JsonResponse
     {
         $dtoClass = $this->getDtoCreate();

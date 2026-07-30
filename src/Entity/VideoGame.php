@@ -103,6 +103,34 @@ class VideoGame
         return $this->cover;
     }
 
+    #[Groups(['video_game:read'])]
+    public function getCoverUrl(): ?array
+    {
+        if (!$this->cover) {
+            return null;
+        }
+
+        $baseUrl = 'https://images.igdb.com/igdb/image/upload';
+
+        return [
+            'small' => sprintf(
+                '%s/t_cover_small/%s.jpg',
+                $baseUrl,
+                $this->cover,
+            ),
+            'medium' => sprintf(
+                '%s/t_cover_big/%s.jpg',
+                $baseUrl,
+                $this->cover,
+            ),
+            'large' => sprintf(
+                '%s/t_cover_big_2x/%s.jpg',
+                $baseUrl,
+                $this->cover,
+            ),
+        ];
+    }
+
     public function setCover(?string $cover): static
     {
         $this->cover = $cover;
