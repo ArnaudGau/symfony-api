@@ -14,7 +14,12 @@ class GameConsole
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['gameConsole:read'])]
     private ?int $id = null;
+
+    #[ORM\Column(nullable: true, unique: true)]
+    #[Groups(['gameConsole:read'])]
+    private ?int $igdbId = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['gameConsole:read'])]
@@ -23,7 +28,7 @@ class GameConsole
     /**
      * @var Collection<int, VideoGame>
      */
-    #[ORM\OneToMany(targetEntity: VideoGame::class, mappedBy: 'console')]
+    #[ORM\ManyToMany(targetEntity: VideoGame::class, mappedBy: 'consoles')]
     private Collection $videoGames;
 
     public function __construct()
@@ -39,6 +44,18 @@ class GameConsole
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getIgdbId(): ?int
+    {
+        return $this->igdbId;
+    }
+
+    public function setIgdbId(int $igdbId): static
+    {
+        $this->igdbId = $igdbId;
+
+        return $this;
     }
 
     public function setName(string $name): static
@@ -60,7 +77,7 @@ class GameConsole
     {
         if (!$this->videoGames->contains($videoGame)) {
             $this->videoGames->add($videoGame);
-            $videoGame->setConsole($this);
+            $videoGame->addConsole($this);
         }
 
         return $this;
@@ -69,10 +86,7 @@ class GameConsole
     public function removeVideoGame(VideoGame $videoGame): static
     {
         if ($this->videoGames->removeElement($videoGame)) {
-            // set the owning side to null (unless already changed)
-            if ($videoGame->getConsole() === $this) {
-                $videoGame->setConsole(null);
-            }
+            $videoGame->removeConsole($this);
         }
 
         return $this;

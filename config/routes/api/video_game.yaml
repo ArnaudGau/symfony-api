@@ -8,12 +8,22 @@ api_video_game_create:
     controller: App\Controller\Api\VideoGameController::create
     methods: [POST]
 
+api_video_game_igdb_search:
+    path: /video_games/igdb/search
+    controller: App\Controller\Api\VideoGameController::searchIgdb
+    methods: [GET]
+
+api_video_game_igdb_import:
+    path: /video_games/igdb/import
+    controller: App\Controller\Api\VideoGameController::createByIgdb
+    methods: [POST]
+
 api_video_game_update:
-    path: /video_games/{id}
+    path: /video_games/update/{id}
     controller: App\Controller\Api\VideoGameController::update
     methods: [PUT]
 
 api_video_game_delete:
-    path: /video_games/{id}
+    path: /video_games/delete/{id}
     controller: App\Controller\Api\VideoGameController::delete
     methods: [DELETE]

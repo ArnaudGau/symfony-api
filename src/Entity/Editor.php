@@ -14,7 +14,12 @@ class Editor
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['editor:read'])]
     private ?int $id = null;
+
+    #[ORM\Column(nullable: true, unique: true)]
+    #[Groups(['editor:read'])]
+    private ?int $igdbId = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(['editor:read'])]
@@ -39,6 +44,18 @@ class Editor
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getIgdbId(): ?int
+    {
+        return $this->igdbId;
+    }
+
+    public function setIgdbId(int $igdbId): static
+    {
+        $this->igdbId = $igdbId;
+
+        return $this;
     }
 
     public function setName(string $name): static

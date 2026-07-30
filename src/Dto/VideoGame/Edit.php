@@ -12,14 +12,15 @@ class Edit
     #[Assert\Length(max: 255)]
     public ?string $cover = null;
 
-    #[Assert\PositiveOrZero]
-    public ?float $price = null;
-
     #[Assert\Range(min: 0, max: 5)]
     public ?int $rating = null;
 
-    #[Assert\Positive]
-    public ?int $consoleId = null;
+    #[Assert\Unique]
+    #[Assert\All([
+        new Assert\Type('integer'),
+        new Assert\Positive(),
+    ])]
+    public ?array $consoleIds = null;
 
     #[Assert\Count(min: 1)]
     #[Assert\Unique]

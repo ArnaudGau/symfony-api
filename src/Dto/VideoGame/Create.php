@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class Create
 {
-     #[Assert\NotBlank]
+    #[Assert\NotBlank]
     #[Assert\Length(max: 255)]
     public ?string $name = null;
 
@@ -14,16 +14,16 @@ class Create
     public ?string $cover = null;
 
     #[Assert\NotNull]
-    #[Assert\PositiveOrZero]
-    public ?float $price = null;
-
-    #[Assert\NotNull]
-    #[Assert\Range(min: 0, max: 100)]
+    #[Assert\Range(min: 0, max: 5)]
     public ?int $rating = null;
 
-    #[Assert\NotNull]
-    #[Assert\Positive]
-    public ?int $consoleId = null;
+    #[Assert\Count(min: 1)]
+    #[Assert\Unique]
+    #[Assert\All([
+        new Assert\Type('integer'),
+        new Assert\Positive(),
+    ])]
+    public array $consoleIds = [];
 
     #[Assert\Count(min: 1)]
     #[Assert\Unique]

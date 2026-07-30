@@ -14,52 +14,76 @@ class VideoGame
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['video_game:read'])]
     private ?int $id = null;
 
+    #[ORM\Column(nullable: true, unique: true)]
+    #[Groups(['video_game:read'])]
+    private ?int $igdbId = null;
+
     #[ORM\Column(length: 255)]
-    #[Groups(['videoGame:read'])]
+    #[Groups(['video_game:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['videoGame:read'])]
+    #[Groups(['video_game:read'])]
     private ?string $cover = null;
 
-    #[ORM\ManyToOne(inversedBy: 'videoGames')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['videoGame:read', 'gameConsole:read'])]
-    private ?GameConsole $console = null;
+    /**
+     * @var Collection<int, GameConsole>
+     */
+    #[ORM\ManyToMany(targetEntity: GameConsole::class, inversedBy: 'videoGames')]
+    #[Groups(['video_game:read', 'gameConsole:read'])]
+    private Collection $consoles;
 
     /**
      * @var Collection<int, Developer>
      */
     #[ORM\ManyToMany(targetEntity: Developer::class, inversedBy: 'videoGames')]
-    #[Groups(['videoGame:read', 'developer:read'])]
+    #[Groups(['video_game:read', 'developer:read'])]
     private Collection $developer;
 
     /**
      * @var Collection<int, Editor>
      */
     #[ORM\ManyToMany(targetEntity: Editor::class, inversedBy: 'videoGames')]
-    #[Groups(['videoGame:read', 'editor:read'])]
+    #[Groups(['video_game:read', 'editor:read'])]
     private Collection $editor;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['videoGame:read'])]
+    #[Groups(['video_game:read'])]
     private ?float $price = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['videoGame:read'])]
+    #[Groups(['video_game:read'])]
+    private ?float $igdbRating = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['video_game:read'])]
     private ?int $rating = null;
 
     public function __construct()
     {
         $this->developer = new ArrayCollection();
         $this->editor = new ArrayCollection();
+        $this->consoles = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getIgdbId(): ?int
+    {
+        return $this->igdbId;
+    }
+
+    public function setIgdbId(int $igdbId): static
+    {
+        $this->igdbId = $igdbId;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -86,14 +110,26 @@ class VideoGame
         return $this;
     }
 
-    public function getConsole(): ?GameConsole
+    /**
+     * @return Collection<int, GameConsole>
+     */
+    public function getConsoles(): Collection
     {
-        return $this->console;
+        return $this->consoles;
     }
 
-    public function setConsole(?GameConsole $console): static
+    public function addConsole(GameConsole $console): static
     {
-        $this->console = $console;
+        if (!$this->consoles->contains($console)) {
+            $this->consoles->add($console);
+        }
+
+        return $this;
+    }
+
+    public function removeConsole(GameConsole $console): static
+    {
+        $this->consoles->removeElement($console);
 
         return $this;
     }
@@ -166,6 +202,18 @@ class VideoGame
     public function setRating(?int $rating): static
     {
         $this->rating = $rating;
+
+        return $this;
+    }
+
+    public function getIgdbRating(): ?float
+    {
+        return $this->igdbRating;
+    }
+
+    public function setIgdbRating(?float $igdbRating): static
+    {
+        $this->igdbRating = $igdbRating;
 
         return $this;
     }
