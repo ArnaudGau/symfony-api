@@ -19,7 +19,7 @@ final class IgdbService
     public function search(string $title): array
     {
         $query = sprintf(
-            'search "%s"; fields id,name,summary,cover.image_id,platforms.name; limit 10;',
+            'search "%s"; fields id,name,summary,cover.image_id,platforms.id,platforms.name; limit 50;',
             addcslashes($title, '"\\'),
         );
 

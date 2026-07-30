@@ -14,15 +14,15 @@ class GameConsole
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['gameConsole:read'])]
+    #[Groups(['game_console:read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true, unique: true)]
-    #[Groups(['gameConsole:read'])]
+    #[Groups(['game_console:read'])]
     private ?int $igdbId = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['gameConsole:read'])]
+    #[Groups(['game_console:read'])]
     private ?string $name = null;
 
     /**

@@ -23,10 +23,10 @@ api_video_game_igdb_show:
     controller: App\Controller\Api\VideoGameController::show
     methods: [GET]
 
-api_video_game_update:
-    path: /video_games/update/{id}
-    controller: App\Controller\Api\VideoGameController::update
-    methods: [PUT]
+api_video_game_rating:
+    path: /video_games/rating/{id}
+    controller: App\Controller\Api\VideoGameController::rating
+    methods: [PATCH]
 
 api_video_game_delete:
     path: /video_games/delete/{id}

@@ -59,19 +59,34 @@ class VideoGameRepository extends ServiceEntityRepository
         return $videoGame;
     }
 
+    public function updateRating(VideoGame $videoGame, ?int $rating): VideoGame
+    {
+        $videoGame->setRating($rating);
+        $this->getEntityManager()->flush();
+
+        return $videoGame;
+    }
+
     private function findOrCreateConsole(array $platform): GameConsole
     {
         $entityManager = $this->getEntityManager();
-        $console = $entityManager->getRepository(GameConsole::class)->findOneBy([
-            'igdbId' => (int) $platform['id'],
+        $repository = $entityManager->getRepository(GameConsole::class);
+        $name = trim((string) $platform['name']);
+        $igdbId = (int) $platform['id'];
+        $console = $repository->findOneBy([
+            'igdbId' => $igdbId,
+        ]) ?? $repository->findOneBy([
+            'name' => $name,
         ]);
 
         if (!$console) {
-            $console = (new GameConsole())->setIgdbId((int) $platform['id']);
+            $console = new GameConsole();
             $entityManager->persist($console);
         }
 
-        $console->setName($platform['name']);
+        $console
+            ->setIgdbId($igdbId)
+            ->setName($name);
 
         return $console;
     }
@@ -79,14 +94,18 @@ class VideoGameRepository extends ServiceEntityRepository
     private function findOrCreateEditor(int $igdbId, string $name): Editor
     {
         $entityManager = $this->getEntityManager();
-        $editor = $entityManager->getRepository(Editor::class)->findOneBy(['igdbId' => $igdbId]);
+        $repository = $entityManager->getRepository(Editor::class);
+        $editor = $repository->findOneBy(['igdbId' => $igdbId])
+            ?? $repository->findOneBy(['name' => $name]);
 
         if (!$editor) {
-            $editor = (new Editor())->setIgdbId($igdbId);
+            $editor = new Editor();
             $entityManager->persist($editor);
         }
 
-        $editor->setName($name);
+        $editor
+            ->setIgdbId($igdbId)
+            ->setName($name);
 
         return $editor;
     }
@@ -94,14 +113,18 @@ class VideoGameRepository extends ServiceEntityRepository
     private function findOrCreateDeveloper(int $igdbId, string $name): Developer
     {
         $entityManager = $this->getEntityManager();
-        $developer = $entityManager->getRepository(Developer::class)->findOneBy(['igdbId' => $igdbId]);
+        $repository = $entityManager->getRepository(Developer::class);
+        $developer = $repository->findOneBy(['igdbId' => $igdbId])
+            ?? $repository->findOneBy(['name' => $name]);
 
         if (!$developer) {
-            $developer = (new Developer())->setIgdbId($igdbId);
+            $developer = new Developer();
             $entityManager->persist($developer);
         }
 
-        $developer->setName($name);
+        $developer
+            ->setIgdbId($igdbId)
+            ->setName($name);
 
         return $developer;
     }

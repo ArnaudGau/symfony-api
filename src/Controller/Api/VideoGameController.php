@@ -6,6 +6,7 @@ use App\Controller\BaseCrudController;
 use App\Dto\VideoGame\Create;
 use App\Dto\VideoGame\CreateByIgdb;
 use App\Dto\VideoGame\Edit;
+use App\Dto\VideoGame\Rating;
 use App\Entity\VideoGame;
 use App\Repository\VideoGameRepository;
 use App\Service\Igdb\IgdbService;
@@ -60,12 +61,27 @@ final class VideoGameController extends BaseCrudController
     public function searchIgdb(Request $request): JsonResponse
     {
         $name = trim((string) $request->query->get('name'));
+        $console = trim((string) $request->query->get('console'));
 
         if ('' === $name) {
             throw new BadRequestHttpException('Le paramètre name est obligatoire.');
         }
 
         $results = $this->igdbService->search($name);
+
+        if ('' !== $console) {
+            $normalizedConsole = strtolower($console);
+            $results = array_filter(
+                $results,
+                static fn (array $game): bool => array_any(
+                    $game['platforms'] ?? [],
+                    static fn (array $platform): bool => str_contains(
+                        strtolower((string) ($platform['name'] ?? '')),
+                        $normalizedConsole,
+                    ),
+                ),
+            );
+        }
 
         return $this->json(array_map(
             static fn (array $game): array => [
@@ -112,5 +128,26 @@ final class VideoGameController extends BaseCrudController
         return $this->json($videoGame, Response::HTTP_CREATED, [], [
             'groups' => $this->getReadGroups(),
         ]);
+    }
+
+    public function rating(Request $request, int $id): JsonResponse
+    {
+        /** @var Rating $dto */
+        $dto = $this->validateDto($request, Rating::class);
+
+        /** @var VideoGameRepository $repository */
+        $repository = $this->getRepository();
+        $videoGame = $repository->find($id);
+
+        if (!$videoGame) {
+            throw new NotFoundHttpException('Jeu introuvable.');
+        }
+
+        return $this->json(
+            $repository->updateRating($videoGame, $dto->rating),
+            Response::HTTP_OK,
+            [],
+            ['groups' => $this->getReadGroups()],
+        );
     }
 }
