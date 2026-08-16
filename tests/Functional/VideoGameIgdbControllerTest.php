@@ -52,6 +52,38 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
         self::assertSame('The Witcher 3: Wild Hunt', $response[0]['name']);
     }
 
+    public function testAdminCanFilterIgdbSearchByConsoleName(): void
+    {
+        $this->mockIgdb([[
+            [
+                'id' => 418,
+                'name' => 'Final Fantasy X',
+                'platforms' => [['id' => 8, 'name' => 'PlayStation 2']],
+            ],
+            [
+                'id' => 999,
+                'name' => 'Final Fantasy X HD',
+                'platforms' => [['id' => 167, 'name' => 'PlayStation 5']],
+            ],
+        ]]);
+
+        $this->client->loginUser($this->admin);
+        $this->client->request(
+            'GET',
+            '/api/video_games/igdb/search?name=Final%20Fantasy%20X&console=playstation%202',
+        );
+
+        self::assertResponseIsSuccessful();
+        $response = json_decode(
+            $this->client->getResponse()->getContent(),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        self::assertCount(1, $response);
+        self::assertSame(418, $response[0]['igdbId']);
+        self::assertSame(8, $response[0]['platforms'][0]['id']);
+    }
+
     public function testAdminCanImportSelectedIgdbGame(): void
     {
         $this->mockIgdb([
@@ -92,6 +124,12 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
         );
 
         self::assertResponseStatusCodeSame(201);
+        $response = json_decode(
+            $this->client->getResponse()->getContent(),
+            true,
+            flags: JSON_THROW_ON_ERROR,
+        );
+        self::assertSame('PlayStation 5', $response['consoles'][0]['name']);
 
         $videoGame = $this->entityManager()
             ->getRepository(VideoGame::class)
@@ -114,6 +152,85 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
             'igdbId' => 909,
             'name' => 'CD Projekt',
         ]));
+    }
+
+    public function testImportReusesRelationsWithTheSameName(): void
+    {
+        $entityManager = $this->entityManager();
+        $console = (new GameConsole())->setName('PlayStation 2');
+        $developer = (new Developer())->setName('Square Enix');
+        $editor = (new Editor())->setName('Square Enix Europe');
+        $entityManager->persist($console);
+        $entityManager->persist($developer);
+        $entityManager->persist($editor);
+        $entityManager->flush();
+
+        $consoleId = $console->getId();
+        $developerId = $developer->getId();
+        $editorId = $editor->getId();
+
+        $this->mockIgdb([[[
+            'id' => 418,
+            'name' => 'Final Fantasy X',
+            'platforms' => [['id' => 8, 'name' => 'PlayStation 2']],
+            'involved_companies' => [
+                [
+                    'company' => ['id' => 123, 'name' => 'Square Enix'],
+                    'developer' => true,
+                    'publisher' => false,
+                ],
+                [
+                    'company' => ['id' => 456, 'name' => 'Square Enix Europe'],
+                    'developer' => false,
+                    'publisher' => true,
+                ],
+            ],
+        ]]]);
+
+        $this->client->loginUser($this->admin);
+        $this->client->request(
+            'POST',
+            '/api/video_games/igdb/import',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'igdbId' => 418,
+                'platformIgdbIds' => [8],
+            ], JSON_THROW_ON_ERROR),
+        );
+
+        self::assertResponseStatusCodeSame(201);
+        self::assertSame($consoleId, $entityManager->getRepository(GameConsole::class)->findOneBy(['igdbId' => 8])?->getId());
+        self::assertSame($developerId, $entityManager->getRepository(Developer::class)->findOneBy(['igdbId' => 123])?->getId());
+        self::assertSame($editorId, $entityManager->getRepository(Editor::class)->findOneBy(['igdbId' => 456])?->getId());
+        self::assertSame(1, $entityManager->getRepository(GameConsole::class)->count(['name' => 'PlayStation 2']));
+        self::assertSame(1, $entityManager->getRepository(Developer::class)->count(['name' => 'Square Enix']));
+        self::assertSame(1, $entityManager->getRepository(Editor::class)->count(['name' => 'Square Enix Europe']));
+    }
+
+    public function testAdminCanOnlyUpdateTheGameRatingThroughDedicatedRoute(): void
+    {
+        $videoGame = (new VideoGame())
+            ->setName('Final Fantasy X')
+            ->setCover('original-cover');
+        $this->entityManager()->persist($videoGame);
+        $this->entityManager()->flush();
+
+        $this->client->loginUser($this->admin);
+        $this->client->request(
+            'PATCH',
+            sprintf('/api/video_games/rating/%d', $videoGame->getId()),
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode(['rating' => 5], JSON_THROW_ON_ERROR),
+        );
+
+        self::assertResponseIsSuccessful();
+        self::assertSame(5, $videoGame->getRating());
+        self::assertSame('Final Fantasy X', $videoGame->getName());
+        self::assertSame('original-cover', $videoGame->getCover());
     }
 
     private function mockIgdb(array $igdbPayloads): void

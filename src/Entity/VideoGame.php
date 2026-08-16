@@ -33,7 +33,7 @@ class VideoGame
      * @var Collection<int, GameConsole>
      */
     #[ORM\ManyToMany(targetEntity: GameConsole::class, inversedBy: 'videoGames')]
-    #[Groups(['video_game:read', 'gameConsole:read'])]
+    #[Groups(['video_game:read', 'game_console:read'])]
     private Collection $consoles;
 
     /**
