@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\VideoGameRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -50,9 +51,9 @@ class VideoGame
     #[Groups(['video_game:read', 'editor:read'])]
     private Collection $editor;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
     #[Groups(['video_game:read'])]
-    private ?float $price = null;
+    private ?string $price = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['video_game:read'])]
@@ -62,11 +63,19 @@ class VideoGame
     #[Groups(['video_game:read'])]
     private ?int $rating = null;
 
+    /**
+     * @var Collection<int, GamePriceHistory>
+     */
+    #[ORM\OneToMany(targetEntity: GamePriceHistory::class, mappedBy: 'game')]
+    #[Groups(['video_game:read', 'game_price_history:read'])]
+    private Collection $gamePriceHistories;
+
     public function __construct()
     {
         $this->developer = new ArrayCollection();
         $this->editor = new ArrayCollection();
         $this->consoles = new ArrayCollection();
+        $this->gamePriceHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,6 +251,36 @@ class VideoGame
     public function setIgdbRating(?float $igdbRating): static
     {
         $this->igdbRating = $igdbRating;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GamePriceHistory>
+     */
+    public function getGamePriceHistories(): Collection
+    {
+        return $this->gamePriceHistories;
+    }
+
+    public function addGamePriceHistory(GamePriceHistory $gamePriceHistory): static
+    {
+        if (!$this->gamePriceHistories->contains($gamePriceHistory)) {
+            $this->gamePriceHistories->add($gamePriceHistory);
+            $gamePriceHistory->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGamePriceHistory(GamePriceHistory $gamePriceHistory): static
+    {
+        if ($this->gamePriceHistories->removeElement($gamePriceHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($gamePriceHistory->getGame() === $this) {
+                $gamePriceHistory->setGame(null);
+            }
+        }
 
         return $this;
     }
