@@ -13,6 +13,7 @@ class GamePriceHistory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['game_price_history:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'gamePriceHistories')]
@@ -23,10 +24,10 @@ class GamePriceHistory
     #[Groups(['game_price_history:read'])]
     private ?string $price = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Groups(['game_price_history:read'])]
 
-    private ?\DateTime $date = null;
+    private ?\DateTimeImmutable $date = null;
 
     public function getId(): ?int
     {
@@ -57,12 +58,12 @@ class GamePriceHistory
         return $this;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): ?\DateTimeImmutable
     {
         return $this->date;
     }
 
-    public function setDate(\DateTime $date): static
+    public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
 

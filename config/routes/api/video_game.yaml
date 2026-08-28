@@ -28,6 +28,16 @@ api_video_game_rating:
     controller: App\Controller\Api\VideoGameController::rating
     methods: [PATCH]
 
+api_video_game_refresh_all_prices:
+    path: /video_games/prices/refresh
+    controller: App\Controller\Api\VideoGameController::refreshAllPrices
+    methods: [POST]
+
+api_video_game_refresh_price:
+    path: /video_games/{id}/price/refresh
+    controller: App\Controller\Api\VideoGameController::refreshPrice
+    methods: [POST]
+
 api_video_game_delete:
     path: /video_games/delete/{id}
     controller: App\Controller\Api\VideoGameController::delete

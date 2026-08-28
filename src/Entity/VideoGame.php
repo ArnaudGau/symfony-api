@@ -51,7 +51,7 @@ class VideoGame
     #[Groups(['video_game:read', 'editor:read'])]
     private Collection $editor;
 
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     #[Groups(['video_game:read'])]
     private ?string $price = null;
 
@@ -219,12 +219,12 @@ class VideoGame
         return $this;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?string
     {
         return $this->price;
     }
 
-    public function setPrice(?float $price): static
+    public function setPrice(?string $price): static
     {
         $this->price = $price;
 

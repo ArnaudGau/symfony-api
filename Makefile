@@ -3,6 +3,7 @@ APP = $(COMPOSE) exec app
 
 .PHONY: build up down restart shell install update composer console \
 	cache-clear cache-warmup logs serve \
+	worker worker-logs \
 	entity migration migrate rollback schema-validate \
 	fixtures test routes debug-env reset-db test-db-reset tests
 
@@ -44,6 +45,12 @@ serve:
 
 logs:
 	$(COMPOSE) logs -f app
+
+worker:
+	$(COMPOSE) up -d worker
+
+worker-logs:
+	$(COMPOSE) logs -f worker
 
 # Symfony / Doctrine
 

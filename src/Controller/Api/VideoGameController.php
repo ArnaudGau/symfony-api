@@ -8,6 +8,7 @@ use App\Dto\VideoGame\CreateByIgdb;
 use App\Dto\VideoGame\Edit;
 use App\Dto\VideoGame\Rating;
 use App\Entity\VideoGame;
+use App\Message\UpdateVideoGamePrice;
 use App\Repository\VideoGameRepository;
 use App\Service\Igdb\IgdbService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -29,6 +31,7 @@ final class VideoGameController extends BaseCrudController
         ValidatorInterface $validator,
         LoggerInterface $logger,
         private readonly IgdbService $igdbService,
+        private readonly MessageBusInterface $messageBus,
     ) {
         parent::__construct($entityManager, $serializer, $validator, $logger);
     }
@@ -55,6 +58,7 @@ final class VideoGameController extends BaseCrudController
             'game_console:read',
             'developer:read',
             'editor:read',
+            'game_price_history:read',
         ];
     }
 
@@ -124,6 +128,7 @@ final class VideoGameController extends BaseCrudController
         }
 
         $videoGame = $repository->createByIgdb($dto, $igdbGame);
+        $this->messageBus->dispatch(new UpdateVideoGamePrice((int) $videoGame->getId()));
 
         return $this->json($videoGame, Response::HTTP_CREATED, [], [
             'groups' => $this->getReadGroups(),
@@ -149,5 +154,35 @@ final class VideoGameController extends BaseCrudController
             [],
             ['groups' => $this->getReadGroups()],
         );
+    }
+
+    public function refreshPrice(int $id): JsonResponse
+    {
+        $videoGame = $this->getRepository()->find($id);
+
+        if (!$videoGame) {
+            throw new NotFoundHttpException('Jeu introuvable.');
+        }
+
+        $this->messageBus->dispatch(new UpdateVideoGamePrice($id));
+
+        return $this->json(
+            ['message' => 'La mise à jour du prix a été ajoutée à la file.'],
+            Response::HTTP_ACCEPTED,
+        );
+    }
+
+    public function refreshAllPrices(): JsonResponse
+    {
+        $videoGames = $this->getRepository()->findAll();
+
+        foreach ($videoGames as $videoGame) {
+            $this->messageBus->dispatch(new UpdateVideoGamePrice((int) $videoGame->getId()));
+        }
+
+        return $this->json([
+            'message' => 'Les mises à jour de prix ont été ajoutées à la file.',
+            'queued' => count($videoGames),
+        ], Response::HTTP_ACCEPTED);
     }
 }
