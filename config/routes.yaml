@@ -37,3 +37,7 @@ game-console:
 game:
     prefix: /api
     resource: 'routes/api/video_game.yaml'
+
+game-price-history:
+    prefix: /api
+    resource: 'routes/api/game_price_history.yaml'

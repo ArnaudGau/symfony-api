@@ -1,0 +1,19 @@
+api_game_price_history_index:
+    path: /game_price_historys
+    controller: App\Controller\Api\GamePriceHistoryController::index
+    methods: [GET]
+
+api_game_price_history_create:
+    path: /game_price_historys
+    controller: App\Controller\Api\GamePriceHistoryController::create
+    methods: [POST]
+
+api_game_price_history_update:
+    path: /game_price_historys/{id}
+    controller: App\Controller\Api\GamePriceHistoryController::update
+    methods: [PUT]
+
+api_game_price_history_delete:
+    path: /game_price_historys/{id}
+    controller: App\Controller\Api\GamePriceHistoryController::delete
+    methods: [DELETE]

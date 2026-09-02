@@ -9,6 +9,8 @@
 parameters:
     igdb.client_id: '%env(IGDB_CLIENT_ID)%'
     igdb.client_secret: '%env(IGDB_CLIENT_SECRET)%'
+    ollama.url: '%env(OLLAMA_URL)%'
+    ollama.model: '%env(OLLAMA_MODEL)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -30,3 +32,8 @@ services:
     App\Service\Igdb\IgdbService:
         arguments:
             $igdbClientId: '%igdb.client_id%'
+
+    App\Service\Ollama\OllamaPriceEstimator:
+        arguments:
+            $ollamaUrl: '%ollama.url%'
+            $ollamaModel: '%ollama.model%'

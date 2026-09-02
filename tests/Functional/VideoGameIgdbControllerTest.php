@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 
 class VideoGameIgdbControllerTest extends BaseFunctionnalCase
 {
@@ -130,6 +131,9 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
             flags: JSON_THROW_ON_ERROR,
         );
         self::assertSame('PlayStation 5', $response['consoles'][0]['name']);
+        $transport = static::getContainer()->get('messenger.transport.async');
+        self::assertInstanceOf(InMemoryTransport::class, $transport);
+        self::assertCount(1, $transport->getSent());
 
         $videoGame = $this->entityManager()
             ->getRepository(VideoGame::class)
@@ -231,6 +235,24 @@ class VideoGameIgdbControllerTest extends BaseFunctionnalCase
         self::assertSame(5, $videoGame->getRating());
         self::assertSame('Final Fantasy X', $videoGame->getName());
         self::assertSame('original-cover', $videoGame->getCover());
+    }
+
+    public function testAdminCanQueueAPriceRefresh(): void
+    {
+        $videoGame = (new VideoGame())->setName('Final Fantasy X');
+        $this->entityManager()->persist($videoGame);
+        $this->entityManager()->flush();
+
+        $this->client->loginUser($this->admin);
+        $this->client->request(
+            'POST',
+            sprintf('/api/video_games/%d/price/refresh', $videoGame->getId()),
+        );
+
+        self::assertResponseStatusCodeSame(202);
+        $transport = static::getContainer()->get('messenger.transport.async');
+        self::assertInstanceOf(InMemoryTransport::class, $transport);
+        self::assertCount(1, $transport->getSent());
     }
 
     private function mockIgdb(array $igdbPayloads): void
